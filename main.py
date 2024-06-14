@@ -1,9 +1,17 @@
 def main():
     book_path = "books/frankenstein.txt"
     text = get_book_text(book_path)
-    print(text)                                         # Print the entire book
-    print("Word count:", count_words(text))             # Print the word count from count_words function
-    print("Character count:", count_characters(text))   # Print the character count from count_characters function
+    word_count = count_words(text)
+    char_count = count_characters(text)
+
+    # Convert dictionary to list of dictionaries
+    char_list = convert_dict_to_list(char_count)
+
+    # Sort the list by 'num' in descending order
+    char_list.sort(reverse=True, key=lambda x: x['num'])
+
+    # Print the report
+    print_report(book_path, word_count, char_list)
 
 
 def get_book_text(path):
@@ -27,5 +35,25 @@ def count_characters(text):
             else:
                 char_count[char] = 1
     return char_count                
+
+def convert_dict_to_list(char_count):
+    char_list = []
+    for char, num in char_count.items():
+        char_list.append({'character': char, 'num': num})
+    return char_list
+
+
+def print_report(book_path, word_count, char_list):
+    # Prints the header
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{word_count} words found in the document\n")
+
+    # Print each character's count
+    for entry in char_list:
+        print(f"The '{entry['character']}' character was found {entry['num']} times")
+
+    # Print the footer
+    print(f"--- End Report ---")
+
 
 main()
